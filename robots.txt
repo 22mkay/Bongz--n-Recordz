@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://22mkay.github.io/Bongz--n-Recordz/sitemap.xml
