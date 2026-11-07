@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Portal | Bongz 'n Recordz</title>
+    <link rel="stylesheet" href="CSS/styles.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="brand-wrap">
+                <img src="Bongz'NRecords.jpg" alt="Bongz 'n Recordz Logo" class="brand-logo">
+                <h1 class="logo">Bongz 'n <span>Recordz</span></h1>
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="vault.html">The Vault</a></li>
+                    <li><a href="member-portal.html" style="color: var(--slime-green);">My Club Card</a></li>
+                    <li><button onclick="logoutUser()" class="btn-slime btn-nav" style="background: var(--rastas-red); color: #fff;">Logout</button></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="section-container">
+        <div class="container">
+            <!-- Dynamic Digital Membership Card -->
+            <h3>Your Digital Club Pass</h3>
+            <div id="cardContainer" class="member-card-wrapper"></div>
+
+            <!-- Live Pickup Order Tracker -->
+            <div style="margin-bottom: 4rem;">
+                <h3>Live Pickup Order Tracker</h3>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Orders update instantaneously as our Braamfontein budtenders pack your session.</p>
+                <div id="memberOrdersList" class="grid-3"></div>
+            </div>
+
+            <!-- Instant Pickup Ordering Menu -->
+            <h3>Order Ahead for Braam Pickup</h3>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">Your tier discount (<span id="discountLabel" style="color: var(--slime-green); font-weight: bold;"></span>) is automatically applied below.</p>
+            <div id="orderMenuGrid" class="grid-3"></div>
+        </div>
+    </section>
+
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Bongz 'n Recordz. 18+ Only. Stay Elevated.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+    <script>
+        const currentUser = getCurrentUser();
+        if (!currentUser || currentUser.role !== "member") {
+            window.location.href = "login.html";
+        }
+
+        function renderMembershipCard() {
+            const container = document.getElementById("cardContainer");
+            const tierClass = `tier-${currentUser.tier}-card`;
+            document.getElementById("discountLabel").textContent = `${currentUser.discount * 100}% OFF`;
+
+            container.innerHTML = `
+                <div class="digital-card ${tierClass}">
+                    <div class="card-top">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div class="vinyl-badge"></div>
+                            <div>
+                                <div style="font-weight:800; font-size:1.05rem;">BONGZ 'N RECORDZ</div>
+                                <div style="font-size:0.75rem; color:var(--text-muted);">BRAAMFONTEIN UNDERGROUND CLUB</div>
+                            </div>
+                        </div>
+                        <span class="card-chip">TIER ${currentUser.tier}</span>
+                    </div>
+                    <div class="card-member-name">${currentUser.name}</div>
+                    <div class="card-perks-line">${currentUser.tierName}</div>
+                    <p style="font-size:0.85rem; color:#e2e8f0; margin-bottom:1.25rem;">${currentUser.perks}</p>
+                    <div class="card-bottom">
+                        <div>
+                            <div>PASS ID: <strong style="color:#fff;">${currentUser.cardId}</strong></div>
+                            <div>STATUS: <strong style="color:var(--slime-green);">ACTIVE MEMBER</strong></div>
+                        </div>
+                        <div class="qr-box">SCAN AT COUNTER</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderOrderMenu() {
+            const inventory = getInventory();
+            const grid = document.getElementById("orderMenuGrid");
+
+            grid.innerHTML = inventory.map(item => {
+                const discountedPrice = Math.round(item.price * (1 - currentUser.discount));
+                const outOfStock = item.stock <= 0;
+
+                return `
+                    <div class="card" style="border-top: 4px solid ${item.color};">
+                        <div>
+                            <h4>${item.name}</h4>
+                            <p class="price">
+                                R${discountedPrice} / ${item.unit}
+                                <span style="font-size:0.85rem; text-decoration:line-through; color:var(--text-muted); font-weight:normal;">R${item.price}</span>
+                            </p>
+                            <p>${item.desc}</p>
+                            <p style="font-weight:bold; color:${outOfStock ? 'var(--rastas-red)' : 'var(--slime-green)'};">
+                                ${outOfStock ? 'SOLD OUT' : `Available in Vault: ${item.stock} ${item.unit}s`}
+                            </p>
+                        </div>
+                        <div style="display:flex; gap:0.5rem; align-items:center; margin-top:1rem;">
+                            <input type="number" id="qty-${item.id}" min="1" max="${item.stock}" value="1" 
+                                style="width:75px; padding:0.65rem; border-radius:6px; border:1px solid #333; background:#080c0a; color:#fff;" 
+                                ${outOfStock ? 'disabled' : ''}>
+                            <button onclick="placePickupOrder('${item.id}')" class="btn-slime" style="flex:1;" ${outOfStock ? 'disabled' : ''}>
+                                ${outOfStock ? 'Out of Stock' : 'Order Pickup'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        function placePickupOrder(itemId) {
+            const inventory = getInventory();
+            const itemIndex = inventory.findIndex(i => i.id === itemId);
+            if (itemIndex === -1) return;
+
+            const qtyInput = document.getElementById(`qty-${itemId}`);
+            const qty = parseInt(qtyInput.value, 10);
+            const item = inventory[itemIndex];
+
+            if (!qty || qty <= 0 || qty > item.stock) {
+                alert("Please enter a valid quantity within available stock.");
+                return;
+            }
+
+            // Deduct live stock
+            inventory[itemIndex].stock -= qty;
+            saveInventory(inventory);
+
+            const discountedUnit = Math.round(item.price * (1 - currentUser.discount));
+            const newOrder = {
+                orderId: "ORD-" + Math.floor(1000 + Math.random() * 9000),
+                memberName: currentUser.name,
+                memberEmail: currentUser.email,
+                tierName: currentUser.tierName,
+                itemName: item.name,
+                qty: qty,
+                unit: item.unit,
+                totalPrice: discountedUnit * qty,
+                status: "Order Received",
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+
+            const orders = getOrders();
+            orders.unshift(newOrder);
+            saveOrders(orders);
+
+            renderOrderMenu();
+            renderMemberOrders();
+        }
+
+        function renderMemberOrders() {
+            const orders = getOrders().filter(o => o.memberEmail === currentUser.email);
+            const list = document.getElementById("memberOrdersList");
+
+            if (orders.length === 0) {
+                list.innerHTML = `<div class="card" style="grid-column: 1 / -1; text-align:center;"><p style="margin:0;">No active pickup orders yet. Select an item below to order ahead!</p></div>`;
+                return;
+            }
+
+            list.innerHTML = orders.map(order => {
+                let badgeClass = "status-received";
+                if (order.status === "Packing Your Sesh") badgeClass = "status-packing";
+                if (order.status === "Ready for Braam Pickup") badgeClass = "status-ready";
+
+                return `
+                    <div class="card">
+                        <div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+                                <strong style="color:var(--rastas-yellow);">${order.orderId}</strong>
+                                <span style="font-size:0.8rem; color:var(--text-muted);">${order.time}</span>
+                            </div>
+                            <h4>${order.qty}x ${order.itemName}</h4>
+                            <p class="price">Total: R${order.totalPrice}</p>
+                        </div>
+                        <div>
+                            <span class="status-pill ${badgeClass}">${order.status}</span>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        // Listen for real-time Staff updates from the other tab!
+        window.addEventListener("storage", () => {
+            renderOrderMenu();
+            renderMemberOrders();
+        });
+
+        renderMembershipCard();
+        renderOrderMenu();
+        renderMemberOrders();
+    </script>
+</body>
+</html>

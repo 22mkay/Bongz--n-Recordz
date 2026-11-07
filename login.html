@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club & Staff Login | Bongz 'n Recordz</title>
+    <link rel="stylesheet" href="CSS/styles.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="brand-wrap">
+                <img src="Bongz'NRecords.jpg" alt="Bongz 'n Recordz Logo" class="brand-logo">
+                <h1 class="logo">Bongz 'n <span>Recordz</span></h1>
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="vault.html">The Vault</a></li>
+                    <li><a href="membership.html">Membership</a></li>
+                    <li><a href="index.html#location">Find Us</a></li>
+                    <li><a href="login.html" style="color: var(--slime-green);">Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="section-container">
+        <div class="container">
+            <h3>Access The Inner Circle</h3>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">Log into your Member Portal to order for Braam pickup, or access the Staff Counter.</p>
+
+            <div class="auth-box">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Registered Email</label>
+                        <input type="email" id="email" placeholder="honcho@bongz.co.za" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" value="braam420" required>
+                    </div>
+                    <button type="submit" class="btn-slime" style="width: 100%;">Enter Portal</button>
+                    <p id="loginError" style="color: var(--rastas-red); margin-top: 1rem; font-size: 0.9rem;"></p>
+                </form>
+
+                <!-- Quick Pitch Demo Switcher -->
+                <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dashed #333;">
+                    <p style="font-size: 0.85rem; color: var(--rastas-yellow); margin-bottom: 0.75rem; font-weight: 700;">⚡ LIVE DEMO QUICK-LOGIN (FOR PITCH PRESENTATION):</p>
+                    <div style="display: grid; gap: 0.5rem;">
+                        <button onclick="quickDemo('daytripper@bongz.co.za')" class="btn-slime" style="background: #1e293b; color: #fff; font-size: 0.85rem; padding: 0.6rem;">1. Member: Tier 1 (45 RPM Pass - 5% Off)</button>
+                        <button onclick="quickDemo('backstage@bongz.co.za')" class="btn-slime" style="background: var(--rastas-yellow); color: #000; font-size: 0.85rem; padding: 0.6rem;">2. Member: Tier 2 (Gold LP - 15% Off)</button>
+                        <button onclick="quickDemo('honcho@bongz.co.za')" class="btn-slime" style="font-size: 0.85rem; padding: 0.6rem;">3. Member: Tier 3 (Platinum Dubplate - 25% Off)</button>
+                        <button onclick="quickDemo('staff@bongz.co.za')" class="btn-slime" style="background: var(--rastas-red); color: #fff; font-size: 0.85rem; padding: 0.6rem;">4. Staff Counter Dashboard (Orders & Stock)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Bongz 'n Recordz.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+    <script>
+        function routeUser(user) {
+            if (user.role === "staff") {
+                window.location.href = "staff-dashboard.html";
+            } else {
+                window.location.href = "member-portal.html";
+            }
+        }
+
+        function quickDemo(email) {
+            const user = loginWithEmail(email);
+            if (user) routeUser(user);
+        }
+
+        document.getElementById("loginForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const email = document.getElementById("email").value;
+            const user = loginWithEmail(email);
+            if (user) {
+                routeUser(user);
+            } else {
+                document.getElementById("loginError").textContent = "Account not recognized. Use one of the demo buttons below!";
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Counter Control | Bongz 'n Recordz</title>
+    <link rel="stylesheet" href="CSS/styles.css">
+</head>
+<body>
+
+    <header class="navbar" style="border-bottom-color: var(--rastas-red);">
+        <div class="container nav-container">
+            <a href="index.html" class="brand-wrap">
+                <img src="Bongz'NRecords.jpg" alt="Bongz 'n Recordz Logo" class="brand-logo">
+                <h1 class="logo">Braam <span>Staff Counter</span></h1>
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="vault.html">View Live Vault</a></li>
+                    <li><button onclick="logoutUser()" class="btn-slime btn-nav" style="background: var(--rastas-red); color: #fff;">Logout Staff</button></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="section-container">
+        <div class="container">
+            <!-- Incoming Pickup Orders Queue -->
+            <h3>🔔 Live Incoming Pickup Orders</h3>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">Click a status button below to update the customer's phone screen in real time.</p>
+            <div id="staffOrdersGrid" class="grid-3" style="margin-bottom: 4rem;"></div>
+
+            <!-- Live Inventory Manager -->
+            <h3>📦 Vault Stock Manager (No Coding Required)</h3>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">Adjust gram or crate counts below—changes publish to The Vault and Member Portal immediately.</p>
+            <div id="staffInventoryGrid" class="grid-3"></div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Bongz 'n Recordz Staff System.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+    <script>
+        function renderStaffOrders() {
+            const orders = getOrders();
+            const grid = document.getElementById("staffOrdersGrid");
+
+            if (orders.length === 0) {
+                grid.innerHTML = `<div class="card" style="grid-column: 1 / -1; text-align:center;"><p style="margin:0;">Waiting for incoming member pickup orders...</p></div>`;
+                return;
+            }
+
+            grid.innerHTML = orders.map((o, idx) => `
+                <div class="card" style="border-top: 4px solid var(--rastas-yellow);">
+                    <div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+                            <strong style="color:var(--slime-green);">${o.orderId}</strong>
+                            <span style="font-size:0.8rem; color:var(--text-muted);">${o.time}</span>
+                        </div>
+                        <h4>${o.qty} ${o.unit} - ${o.itemName}</h4>
+                        <p style="margin-bottom:0.5rem; color:#fff;">Member: <strong>${o.memberName}</strong> <br><small style="color:var(--rastas-yellow);">${o.tierName}</small></p>
+                        <p class="price">Collect at Counter: R${o.totalPrice}</p>
+                        <p>Current Status: <strong style="color:var(--slime-green);">${o.status}</strong></p>
+                    </div>
+                    <div style="display:grid; gap:0.5rem; margin-top:1rem;">
+                        <button onclick="updateOrderStatus(${idx}, 'Packing Your Sesh')" class="btn-slime" style="background:var(--rastas-yellow); color:#000; padding:0.5rem;">1. Mark as Packing</button>
+                        <button onclick="updateOrderStatus(${idx}, 'Ready for Braam Pickup')" class="btn-slime" style="padding:0.5rem;">2. Mark Ready for Pickup</button>
+                        <button onclick="clearOrder(${idx})" class="btn-slime" style="background:#222; color:var(--text-muted); box-shadow:none; padding:0.5rem;">Complete / Clear Order</button>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        function updateOrderStatus(index, newStatus) {
+            const orders = getOrders();
+            orders[index].status = newStatus;
+            saveOrders(orders);
+            renderStaffOrders();
+        }
+
+        function clearOrder(index) {
+            const orders = getOrders();
+            orders.splice(index, 1);
+            saveOrders(orders);
+            renderStaffOrders();
+        }
+
+        function renderStaffInventory() {
+            const inventory = getInventory();
+            const grid = document.getElementById("staffInventoryGrid");
+
+            grid.innerHTML = inventory.map((item, idx) => `
+                <div class="card" style="border-top: 4px solid ${item.color};">
+                    <div>
+                        <h4>${item.name}</h4>
+                        <p class="price">R${item.price} / ${item.unit}</p>
+                        <p style="color:#fff; font-weight:bold;">Live Stock: <span style="color:var(--slime-green); font-size:1.3rem;">${item.stock}</span> ${item.unit}s</p>
+                    </div>
+                    <div style="display:flex; gap:0.5rem; margin-top:1rem;">
+                        <button onclick="adjustStock(${idx}, -5)" class="btn-slime" style="background:var(--rastas-red); color:#fff; flex:1; padding:0.5rem;">-5</button>
+                        <button onclick="adjustStock(${idx}, -1)" class="btn-slime" style="background:#334155; color:#fff; flex:1; padding:0.5rem;">-1</button>
+                        <button onclick="adjustStock(${idx}, 1)" class="btn-slime" style="background:#334155; color:#fff; flex:1; padding:0.5rem;">+1</button>
+                        <button onclick="adjustStock(${idx}, 10)" class="btn-slime" style="flex:1; padding:0.5rem;">+10</button>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        function adjustStock(index, amount) {
+            const inventory = getInventory();
+            inventory[index].stock = Math.max(0, inventory[index].stock + amount);
+            saveInventory(inventory);
+            renderStaffInventory();
+        }
+
+        // Listen for instant orders from the Member tab!
+        window.addEventListener("storage", () => {
+            renderStaffOrders();
+            renderStaffInventory();
+        });
+
+        renderStaffOrders();
+        renderStaffInventory();
+    </script>
+</body>
+</html>

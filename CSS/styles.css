@@ -1,4 +1,6 @@
-/* Modern Reset & Bongz 'n Recordz Theme */
+/* ==========================================
+   1. CORE RESET & RASTA/SLIME THEME VARIABLES
+   ========================================== */
 * {
     margin: 0;
     padding: 0;
@@ -11,30 +13,47 @@
     --card-bg: #131a16;
     --primary-green: #16a34a;
     --slime-green: #22c55e;
-    --slime-glow: rgba(34, 197, 94, 0.4);
+    --slime-glow: rgba(34, 197, 94, 0.45);
     --rastas-red: #dc2626;
     --rastas-yellow: #eab308;
     --white: #ffffff;
     --text-muted: #94a3b8;
 }
 
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
 body {
     background-color: var(--bg-dark);
     color: var(--white);
     line-height: 1.6;
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
+/* Fluid Container & Media Resizing */
 .container {
-    width: 90%;
-    max-width: 1100px;
+    width: min(92%, 1140px);
     margin: 0 auto;
 }
 
-/* Navbar */
+img, iframe, video {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* ==========================================
+   2. NAVBAR & SLIMEY BUTTONS
+   ========================================== */
 .navbar {
     background: var(--card-bg);
     padding: 1rem 0;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.6);
     position: sticky;
     top: 0;
     z-index: 100;
@@ -45,10 +64,27 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.brand-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.brand-logo {
+    height: 45px;
+    width: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--slime-green);
 }
 
 .logo {
-    font-size: 1.5rem;
+    font-size: clamp(1.2rem, 2.5vw, 1.5rem);
     color: var(--white);
     font-weight: 700;
 }
@@ -61,7 +97,8 @@ body {
     list-style: none;
     display: flex;
     align-items: center;
-    gap: 2rem;
+    flex-wrap: wrap;
+    gap: 1.5rem;
 }
 
 .nav-links a {
@@ -75,7 +112,6 @@ body {
     color: var(--slime-green);
 }
 
-/* Slimey Button Styling */
 .btn-slime {
     background: var(--slime-green);
     color: #000000;
@@ -87,12 +123,13 @@ body {
     cursor: pointer;
     text-decoration: none;
     display: inline-block;
+    text-align: center;
     box-shadow: 0 0 15px var(--slime-glow);
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
 }
 
 .btn-slime:hover {
-    background: #16a34a;
+    background: var(--primary-green);
     color: var(--white);
     box-shadow: 0 0 25px var(--slime-green);
     transform: translateY(-2px);
@@ -102,18 +139,21 @@ body {
     padding: 0.5rem 1rem !important;
 }
 
-/* Hero Section */
+/* ==========================================
+   3. HERO, GRIDS & CARDS
+   ========================================== */
 .hero {
     background: linear-gradient(135deg, #0f1f14, #1a0f0f);
     color: var(--white);
-    padding: 6rem 0;
+    padding: clamp(3rem, 8vw, 6rem) 0;
     text-align: center;
     border-bottom: 4px solid var(--rastas-red);
 }
 
 .hero-content h2 {
-    font-size: 2.8rem;
+    font-size: clamp(1.8rem, 4.5vw, 2.8rem);
     margin-bottom: 1rem;
+    line-height: 1.2;
 }
 
 .hero-content h2 span {
@@ -121,74 +161,249 @@ body {
 }
 
 .hero-content p {
-    font-size: 1.1rem;
-    max-width: 600px;
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    max-width: 620px;
     margin: 0 auto 2rem auto;
     color: var(--text-muted);
 }
 
-/* Sections Grid */
 .section-container {
-    padding: 5rem 0;
+    padding: clamp(3rem, 6vw, 5rem) 0;
     text-align: center;
 }
 
 .section-container h3 {
-    font-size: 2.2rem;
-    margin-bottom: 3rem;
-    color: var(--white);
+    font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+    margin-bottom: 2rem;
 }
 
 .grid-3 {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+    gap: 1.75rem;
 }
 
 .card {
     background: var(--card-bg);
-    padding: 2.5rem 2rem;
+    padding: 2rem;
     border-radius: 12px;
     border: 1px solid #222;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.35);
     text-align: left;
     transition: transform 0.3s, border-color 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-4px);
     border-color: var(--slime-green);
 }
 
 .card h4 {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
     margin-bottom: 0.5rem;
-    color: var(--white);
 }
 
 .card .price {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 700;
     color: var(--rastas-yellow);
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
 }
 
 .card p {
     color: var(--text-muted);
+    margin-bottom: 1.25rem;
+}
+
+/* ==========================================
+   4. UNIQUE DIGITAL MEMBERSHIP CARDS
+   ========================================== */
+.member-card-wrapper {
+    max-width: 480px;
+    margin: 0 auto 3rem auto;
+    perspective: 1000px;
+}
+
+.digital-card {
+    border-radius: 16px;
+    padding: 1.75rem;
+    position: relative;
+    overflow: hidden;
+    text-align: left;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+    transition: transform 0.4s ease;
+}
+
+.digital-card:hover {
+    transform: scale(1.02);
+}
+
+/* Tier 1: 45 RPM Pass */
+.tier-1-card {
+    background: linear-gradient(135deg, #0f291a 0%, #09130d 100%);
+    border: 2px solid var(--slime-green);
+}
+
+/* Tier 2: Gold LP Card */
+.tier-2-card {
+    background: linear-gradient(135deg, #423307 0%, #171203 100%);
+    border: 2px solid var(--rastas-yellow);
+    box-shadow: 0 0 25px rgba(234, 179, 8, 0.25);
+}
+
+/* Tier 3: Platinum Dubplate */
+.tier-3-card {
+    background: linear-gradient(135deg, #2b0b0e 0%, #090d0b 60%, #12291a 100%);
+    border: 2px solid var(--rastas-red);
+    box-shadow: 0 0 30px rgba(220, 38, 38, 0.4);
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 1.5rem;
 }
 
-/* Map Section */
+.vinyl-badge {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--rastas-yellow) 22%, #000 24%, #111 60%, var(--rastas-red) 65%, var(--slime-green) 72%);
+    border: 2px solid #fff;
+}
+
+.card-chip {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.1);
+    font-weight: 700;
+}
+
+.card-member-name {
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 0.25rem;
+}
+
+.card-perks-line {
+    font-size: 0.85rem;
+    color: var(--rastas-yellow);
+    margin-bottom: 1.25rem;
+    font-weight: 600;
+}
+
+.card-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding-top: 1rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.qr-box {
+    background: #fff;
+    color: #000;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-weight: 800;
+    font-family: monospace;
+    font-size: 0.75rem;
+}
+
+/* ==========================================
+   5. FORMS, PORTALS, TRACKER & FLOATING CALL
+   ========================================== */
+.auth-box {
+    max-width: 460px;
+    margin: 0 auto;
+    background: var(--card-bg);
+    padding: 2.25rem;
+    border-radius: 12px;
+    border: 1px solid var(--primary-green);
+    text-align: left;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: #080c0a;
+    color: var(--white);
+    font-size: 1rem;
+}
+
+.status-pill {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.status-received { background: rgba(234, 179, 8, 0.2); color: var(--rastas-yellow); border: 1px solid var(--rastas-yellow); }
+.status-packing { background: rgba(220, 38, 38, 0.2); color: #f87171; border: 1px solid var(--rastas-red); }
+.status-ready { background: rgba(34, 197, 94, 0.2); color: var(--slime-green); border: 1px solid var(--slime-green); }
+
+/* Floating Call-In Button */
+.floating-call {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--rastas-red);
+    color: var(--white);
+    padding: 0.85rem 1.25rem;
+    border-radius: 50px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 4px 20px rgba(220, 38, 38, 0.6);
+    z-index: 999;
+    border: 2px solid var(--rastas-yellow);
+    transition: transform 0.2s;
+}
+
+.floating-call:hover {
+    transform: scale(1.06);
+}
+
 .map-container {
     margin-top: 2rem;
     width: 100%;
-    height: 400px;
+    height: 400px; /* Give it a definite pixel height */
     border-radius: 12px;
     overflow: hidden;
     border: 2px solid var(--primary-green);
+    position: relative;
 }
 
-/* Footer */
+.map-container iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+}
+
 footer {
     background: #050806;
     color: var(--text-muted);
@@ -196,11 +411,128 @@ footer {
     padding: 2rem 0;
     font-size: 0.9rem;
     border-top: 1px solid #111;
+    margin-top: auto;
+}
+
+/* ==========================================
+   6. RESPONSIVE MEDIA QUERIES (ALL SCREENS)
+   ========================================== */
+@media screen and (max-width: 1024px) {
+    .container {
+        width: 94%;
+    }
 }
 
 @media screen and (max-width: 768px) {
     .nav-container {
         flex-direction: column;
-        gap: 1rem;
+        justify-content: center;
+        text-align: center;
     }
+
+    .nav-links {
+        justify-content: center;
+        gap: 1rem;
+        width: 100%;
+    }
+
+    .card {
+        padding: 1.5rem;
+    }
+
+    .card-top, .card-bottom {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .nav-links {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .btn-slime {
+        width: 100%;
+    }
+
+    .auth-box {
+        padding: 1.5rem;
+    }
+
+    .floating-call {
+        bottom: 12px;
+        right: 12px;
+        left: 12px;
+        text-align: center;
+    }
+}
+
+/* ==========================================
+   AGE VERIFICATION MODAL OVERLAY
+   ========================================== */
+.age-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(5, 8, 6, 0.95);
+    backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.age-modal-card {
+    background: var(--card-bg);
+    border: 2px solid var(--slime-green);
+    border-radius: 16px;
+    padding: clamp(2rem, 4vw, 3rem);
+    max-width: 440px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(34, 197, 94, 0.25);
+}
+
+.age-modal-card h3 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    margin-bottom: 0.75rem;
+    color: var(--white);
+}
+
+.age-modal-card h3 span {
+    color: var(--rastas-yellow);
+}
+
+.age-modal-card p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+}
+
+.age-btn-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.btn-decline {
+    background: #1e1e1e;
+    color: var(--text-muted);
+    border: 1px solid #333;
+    padding: 0.75rem;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-decline:hover {
+    background: var(--rastas-red);
+    color: var(--white);
+    border-color: var(--rastas-red);
 }
